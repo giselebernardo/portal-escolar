@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    <title>Portal Escolar</title>
+</head>
+<body>
+    <header>
+        <div class="logo-nav">
+            🎓 Portal Escolar
+        </div>
+        <div id="dataAtual" style="font-size: 0.9rem; color: #666; font-weight: 500;"></div>
+        <button class="btn-ajuda" onclick="alert('Suporte Técnico:\n(47) 3333-0000\nsuporte@escola.com.br')">
+            ❓ Ajuda
+        </button>
+    </header>
+    
+    <div class="container-principal">
+        
+        <div id="tela-login" class="tela-secao ativa">
+            <div class="cartao" style="max-width: 400px; margin: 0 auto;">
+                <h1>Portal Escolar</h1>
+                <p class="subtitulo">Selecione o seu perfil:</p>
+
+                <button onclick="navegarPara('tela-login-aluno')" class="botao-aluno botao-largo">Sou Aluno</button>
+                <button onclick="navegarPara('tela-login-prof')" class="botao-prof botao-largo">Sou Professor</button>
+            </div>
+
+            <div class="sobre-projeto">
+                <h3>Sobre o Sistema</h3>
+                <p>Sistema desenvolvido como parte da Atividade Extensionista II do curso de Análise e Desenvolvimento de Sistemas.</p>
+                <p><strong>Objetivo:</strong> Otimizar a gestão acadêmica de escolas do ensino fundamental.</p>
+                <div class="ods-badge">ODS 4 - Educação de Qualidade</div>
+            </div>
+        </div>
+
+        <div id="tela-login-prof" class="tela-secao">
+            <div class="cartao" style="max-width: 400px; margin: 0 auto;">
+                <h2 style="color: var(--azul-prof)">Acesso do Professor</h2>
+                <p class="subtitulo">Área restrita a gestão</p>
+
+                <input type="password" id="senhaProfessor" placeholder="Senha">
+
+                <button onclick="entrarComoProfessor()" class="botao-prof botao-largo">Entrar</button>
+                <button onclick="voltarInicio()" class="botao-contorno botao-largo">Voltar</button>
+            </div>
+        </div>
+
+        <div id="tela-login-aluno" class="tela-secao">
+            <div class="cartao" style="max-width: 400px; margin: 0 auto;">
+                <h2 style="color: var(--roxo-aluno)">Acesso do Aluno</h2>
+                <p class="subtitulo">Consulte seu boletim</p>
+
+                <input type="text" id="loginAlunoNome" placeholder="Seu Usuário" style="margin-bottom: 10px;">
+                <input type="password" id="loginAlunoSenha" placeholder="Sua Senha">
+
+                <button onclick="entrarComoAluno()" class="botao-aluno botao-largo">Entrar</button>
+                <button onclick="voltarInicio()" class="botao-contorno botao-largo">Voltar</button>
+            </div>
+        </div>
+
+        <div id="tela-painel-prof" class="tela-secao">
+            <div class="cartao">
+                <div class="cabecalho-perfil">
+                    <div>
+                        <h2 style="margin:0; color: var(--azul-prof);">Gestão Acadêmica</h2>
+                        <small>Cadastre notas e senhas para os alunos</small>
+                    </div>
+                    <button onclick="voltarInicio()" class="botao-contorno">Sair</button>
+                </div>
+
+                <div class="grade-formulario">
+                    <input type="text" id="campoNome" placeholder="Nome do aluno" oninput="verificarAlunoExistente()">
+                    <input type="password" id="campoSenha" placeholder="Crie uma senha para o aluno">
+                    <input type="text" id="campoDisc" placeholder="Disciplina">
+                    
+                    <input type="number" id="campoN1" placeholder="Nota 1" step="0.1">
+                    <input type="number" id="campoN2" placeholder="Nota 2" step="0.1">
+                    <input type="number" id="campoN3" placeholder="Nota 3" step="0.1">
+                    <input type="number" id="campoN4" placeholder="Nota 4" step="0.1">
+                    
+                    <input type="number" id="campoFreq" placeholder="Frequência %">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="salvarNota()" class="botao-prof" style="flex: 2;">Salvar</button>
+                    <button onclick="exportarExcel()" style="background: #10b981; color: white; border-radius: 8px; flex: 1;">Exportar Excel</button>
+                
+                    <button onclick="limparTudo()" style="background: #ef4444; color: white; border-radius: 8px; padding: 12px;">Limpar</button>
+                    <button onclick="gerarDadosTeste()" style="background: #6366f1; color: white; border-radius: 8px; flex: 1;">🎲 Dados de Teste</button>
+                </div>
+
+                <div class="dashboard-container">
+                    <div class="card-stat bg-total">
+                        <span id="statTotal" class="stat-numero">0</span>
+                        <span class="stat-texto">Total Alunos</span>
+                    </div>
+                    <div class="card-stat bg-aprovados">
+                        <span id="statAprovados" class="stat-numero">0</span>
+                        <span class="stat-texto">Aprovações</span>
+                    </div>
+                    <div class="card-stat bg-reprovados">
+                        <span id="statReprovados" class="stat-numero">0</span>
+                        <span class="stat-texto">Reprovações</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; margin-bottom: 10px;">
+                    <input type="text" id="campoBusca" placeholder="🔍 Pesquisar aluno pelo nome..." onkeyup="filtrarTabela()">
+                </div>
+
+                <div class="tabela-rolagem">
+                    <table id="tabelaProf">
+                        <thead>
+                            <tr>
+                                <th>Aluno</th>
+                                <th>Senha</th>
+                                <th>Matéria</th>
+                                <th>Média</th>
+                                <th>Freq.</th>
+                                <th>Status</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tela-painel-aluno" class="tela-secao">
+            <div class="cartao">
+                <div class="cabecalho-perfil">
+                    <div>
+                        <h2 style="margin:0; color: var(--roxo-aluno);">Boletim Online</h2>
+                        <small>Bem-vindo(a), <strong id="nomeAlunoLogado">!</strong></small>
+                    </div>
+                    <button onclick="voltarInicio()" class="botao-contorno">Sair</button>
+                </div>
+
+                <div style="margin-bottom: 15px; text-align: right;">
+                    <button onclick="exportarBoletimAluno()" style="background: #10b981; color: white; border-radius: 8px; font-size: 0.9rem; padding: 10px 20px;">
+                        📥 Baixar Meu Boletim (Excel)
+                    </button>
+                </div>
+
+                <div class="tabela-rolagem">
+                    <table id="tabelaAluno">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>Nota 1</th>
+                                <th>Nota 2</th>
+                                <th>Nota 3</th>
+                                <th>Nota 4</th>
+                                <th>Média</th>
+                                <th>Freq.</th>
+                                <th>Situação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoTabelaAluno"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <footer>
+        <p>© 2026 Sistema de Gestão Escolar - Desenvolvido por Gisele Bernardo da Silva</p>
+        <p style="opacity: 0.7; font-size: 0.75rem;">Atividade Extensionista</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
